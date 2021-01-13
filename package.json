@@ -1,0 +1,17 @@
+{
+  "name": "deconz-sonos",
+  "version": "0.1.0",
+  "description": "Allow controll of Sonos Zone Player through Zigbee devices attached to the deCONZ bridge.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "ws": "~7.4.2"
+  },
+  "author": "ollliegits",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
