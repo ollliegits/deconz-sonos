@@ -8,6 +8,8 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "sonos": "^1.14.0",
     "ws": "~7.4.2"
   },
   "author": "ollliegits",
