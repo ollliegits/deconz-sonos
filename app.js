@@ -1,7 +1,7 @@
 const WebSocket = require('ws')
 
-const host = process.env.DECONZ_WS_HOST || '192.168.1.50'
-const port = process.env.DECONZ_WS_PORT || 443
+const deHost = process.env.DECONZ_WS_HOST || '192.168.1.50'
+const dePort = process.env.DECONZ_WS_PORT || 443
 const switch_id = process.env.DECONZ_SWITCH_ID || 6 // SYMFONISK
 
 var clockwiseStart = 0
