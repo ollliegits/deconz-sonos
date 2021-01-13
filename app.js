@@ -7,19 +7,19 @@ const switch_id = process.env.DECONZ_SWITCH_ID || 6 // SYMFONISK
 var clockwiseStart = 0
 var counterClockwiseStart = 0
 
-const ws = new WebSocket('ws://' + host + ':' + port)
+const ws = new WebSocket('ws://' + deHost + ':' + dePort)
 
 console.log('Start listening...')
 
-ws.onmessage = handleIkeaSymfoniskRemote
-
+ws.onmessage = handleBridgeEvent
 // IKEA-SYMFONISK-REMOTE https://dresden-elektronik.github.io/deconz-rest-doc/endpoints/sensors/button_events/#ikea-symfonisk-remote
-function handleIkeaSymfoniskRemote(msg) {
+function handleBridgeEvent(msg) {
     try {
         var evt = JSON.parse(msg.data)
     }
     catch (e) {
-        console.log("Cannot parse because data is not is proper json format")
+        console.log("Cannot parse because data is not is proper json format.")
+        return
     }
 
     if (evt && evt.e == 'changed' && evt.id == switch_id) {
@@ -65,7 +65,7 @@ function handleIkeaSymfoniskRemote(msg) {
         catch (e) {
             console.log("Error occured evaluating button event.")
             console.log(e)
-
+            return
         }
     }
 }
