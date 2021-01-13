@@ -68,6 +68,7 @@ ws.onmessage = (msg) => {
         catch (e) {
             console.error("Error occured evaluating button event.")
             console.error(e)
+            console.error(evt)
             return
         }
     }
