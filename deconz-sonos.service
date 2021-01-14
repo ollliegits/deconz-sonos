@@ -1,0 +1,18 @@
+# place this file under /lib/systemd/system/
+# start service: systemctl start deconz-sonos
+# auto-start service at boot: systemctl enable deconz-sonos
+#
+[Unit]
+Description=deconz-sonos: Control your Sonos with Zigbee over the deCONZ gateway.
+After=deconz.service
+
+[Service]
+ExecStart=/usr/local/bin/node /home/pi/node_modules/deconz-sonos/app.js
+Restart=always
+User=pi
+Group=pi
+# Environment=PATH=/usr/bin:/usr/local/bin
+WorkingDirectory=/home/pi/node_modules/deconz-sonos/
+
+[Install]
+WantedBy=multi-user.target
