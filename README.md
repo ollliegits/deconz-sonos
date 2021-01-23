@@ -33,6 +33,10 @@ Finally install deconz-sonos from this Github repo using npm:
 
     npm install ollliegits/deconz-sonos
 
-## Configuration
+Now that all prerequisits are installed, deconz-sonos can be setup to run as a systemd service.
 
-## Usage
+TODO:
+
+## Configuration & Usage
+
+TODO:
