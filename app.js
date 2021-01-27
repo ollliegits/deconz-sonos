@@ -85,7 +85,8 @@ function handleButtonEvt(msg) {
                             switch (dialogState) {
                                 case dialogStateFavorites:
                                     // TODO: clean up the Spotify hot fix
-                                    const uri = favorites[current_favorite].uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replaceAll('%3a', ':')
+                                    uri = favorites[current_favorite].uri
+                                    if () uri = uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')
                                     player.play(uri).then((success) => {
                                         console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
                                     }).catch((err) => {
