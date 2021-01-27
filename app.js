@@ -57,7 +57,7 @@ ws.onmessage = (msg) => {
             console.log(evt)
         }
         else
-            if (evt.id == switch_id) {
+            if (evt.id == switch_id && 'state' in evt && 'buttonevent' in evt.state) {
                 try {
                     switch (evt.state.buttonevent) {
                         case 1002:
