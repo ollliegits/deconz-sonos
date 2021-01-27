@@ -1,4 +1,6 @@
 const { Sonos } = require('sonos')
+const { SpotifyRegion } = require('sonos')
+
 const path = require('path')
 const tts = require('./tts')
 const WebSocket = require('ws')
@@ -22,9 +24,12 @@ const ttsClient = new tts.TTS(apiKey, ttsDataDir, ttsPort, ttsHost)
 var tsClockwiseStart = 0
 var tsCounterClockwiseStart = 0
 
-// init sonos player
+// init sonos player, set spotify Region
+// todo: make spotify region configurable
 const player = new Sonos(zpHost);
+player.setSpotifyRegion(SpotifyRegion.EU)
 
+// todo: refactor dialogue state into a class
 const dialogStateFavorites = 10
 const dialogStateNone = 0
 var dialogState = dialogStateNone
@@ -33,23 +38,29 @@ var favorites;
 var current_favorite;
 
 player.getFavorites().then(response => {
-    console.log('Got current favorites %j', response)
+    console.log('Got Sonos favorites %j', response)
     favorites = response.items
-    // asynchronously generate tts mp3's
-    response.items.forEach(i => {
-        const text = i.title
-        const filename = i['id'].replace(path.sep, '_') + '.mp3'
-        ttsClient.ttsToMp3(text, path.join(ttsDataDir, filename), apiKey)
-    });
-}).then(() => {
-    // starting webserver for TTS audio files
-    ttsClient.startTTSServer()
-    console.log('Http server for voice samples started...')
 
-    // init listening to deconz
-    const ws = new WebSocket('ws://' + deHost + ':' + dePort)
-    ws.onmessage = handleButtonEvt
-    console.log('Started listening for Zigbee events...')
+    player.getPlaylist().then(response => {
+        console.log('Got Sonos playlists %j', response)
+        favorites = favorites.concat(response.items)
+        // asynchronously generate tts mp3's
+        favorites.forEach(i => {
+            const text = i.title
+            const filename = i['id'].replace(path.sep, '_') + '.mp3'
+            ttsClient.ttsToMp3(text, path.join(ttsDataDir, filename), apiKey)
+            console.log(`${text} -> ${i.uri}`)
+        });
+    }).then(() => {
+        // starting webserver for TTS audio files
+        ttsClient.startTTSServer()
+        console.log('Http server for voice samples started...')
+
+        // init listening to deconz
+        const ws = new WebSocket('ws://' + deHost + ':' + dePort)
+        ws.onmessage = handleButtonEvt
+        console.log('Started listening for Zigbee events...')
+    }).catch(err => { console.log('Error occurred %j', err) })
 }).catch(err => { console.log('Error occurred %j', err) })
 
 // IKEA-SYMFONISK-REMOTE https://dresden-elektronik.github.io/deconz-rest-doc/endpoints/sensors/button_events/#ikea-symfonisk-remote
@@ -73,9 +84,14 @@ function handleButtonEvt(msg) {
                         case 1002:
                             switch (dialogState) {
                                 case dialogStateFavorites:
-                                    console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
-                                    player.setAVTransportURI(favorites[current_favorite].uri)
-                                    console.log("Dialog 'Sonos favorites' ended")
+                                    // TODO: clean up the Spotify hot fix
+                                    const uri = favorites[current_favorite].uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replaceAll('%3a', ':')
+                                    player.play(uri).then((success) => {
+                                        console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
+                                    }).catch((err) => {
+                                        console.error('Error starting playlist')
+                                        console.error(err)
+                                    })
                                     dialogState = dialogStateNone
                                     break
                                 default:
