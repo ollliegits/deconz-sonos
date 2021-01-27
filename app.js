@@ -116,11 +116,12 @@ function handleButtonEvt(msg) {
                         case 2003:
                             switch (dialogState) {
                                 case dialogStateFavorites:
-                                    console.log('nextFav');
                                     // current_favorite = (current_favorite + 1) % favorites.length;
                                     if (current_favorite < favorites.length - 1) {
                                         current_favorite++;
-                                        const filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
+                                        console.log('Select fav: ' + current_favorite);
+                                        filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
+                                        console.log('Select fav: ' + filename);
                                         player.setAVTransportURI(`http://${ttsHost}:${ttsPort}/` + '2_29.mp3')
                                     }
                                     break
@@ -140,7 +141,9 @@ function handleButtonEvt(msg) {
                                     console.log('prevFav')
                                     if (current_favorite > 0) {
                                         current_favorite--;
-                                        const filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
+                                        console.log('Select fav: ' + current_favorite);
+                                        filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
+                                        console.log('Select fav: ' + filename);
                                         player.setAVTransportURI(`http://192.168.1.50:${ttsPort}/` + filename)
                                     }
                                     break
