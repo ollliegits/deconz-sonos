@@ -121,8 +121,9 @@ function handleButtonEvt(msg) {
                                         current_favorite++;
                                         console.log('Select fav: ' + current_favorite);
                                         filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
-                                        console.log('Select fav: ' + filename);
-                                        player.setAVTransportURI(`http://${ttsHost}:${ttsPort}/` + '2_29.mp3')
+                                        uri = `http://${ttsHost}:${ttsPort}/` + filename
+                                        say(uri)
+                                        // player.setAVTransportURI(uri)
                                     }
                                     break
                                 default:
@@ -143,8 +144,9 @@ function handleButtonEvt(msg) {
                                         current_favorite--;
                                         console.log('Select fav: ' + current_favorite);
                                         filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
-                                        console.log('Select fav: ' + filename);
-                                        player.setAVTransportURI(`http://192.168.1.50:${ttsPort}/` + filename)
+                                        uri = `http://${ttsHost}:${ttsPort}/` + filename
+                                        say(uri)
+                                        // player.setAVTransportURI(`http://${ttsHost}:${ttsPort}/` + filename)
                                     }
                                     break
                                 default:
@@ -164,4 +166,18 @@ function handleButtonEvt(msg) {
                 }
             }
     }
+}
+
+function say(ttsUri) {
+    player.playNotification({
+        uri: ttsUri,
+        onlyWhenPlaying: false, // It will query the state anyway, don't play the notification if the speaker is currently off.
+        volume: 10 // Change the volume for the notification, and revert back afterwards.
+    }).then(result => {
+        // It will wait until the notification is played until getting here.
+        console.log('Did play notification %j', result)
+
+        // It starts (and stops) a listener in the background so you have to exit the process explicitly.
+        process.exit()
+    }).catch(err => { console.log('Error occurred %j', err) })
 }
