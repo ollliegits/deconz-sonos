@@ -1,7 +1,7 @@
-const WebSocket = require('ws')
 const { Sonos } = require('sonos')
-const http = require('http')
-const static = require('node-static');
+const path = require('path')
+const tts = require('./tts')
+const WebSocket = require('ws')
 
 const verbose = process.env.VERBOSE || false
 
@@ -14,6 +14,10 @@ const zpVolFactor = process.env.ZP_VOLFACTOR || 150 // factor used to convert fr
 
 const ttsHost = process.env.TTS_HOST || '192.168.1.50'
 const ttsPort = process.env.TTS_PORT || 8080
+const apiKey = process.env.GCP_KEY
+const ttsDataDir = process.env.TTS_DATA_DIR || '/tmp/tts/'
+
+const ttsClient = new tts.TTS(apiKey, ttsDataDir, ttsPort, ttsHost)
 
 var tsClockwiseStart = 0
 var tsCounterClockwiseStart = 0
@@ -23,17 +27,20 @@ const player = new Sonos(zpHost);
 
 // init listening to deconz
 const ws = new WebSocket('ws://' + deHost + ':' + dePort)
-
-// starting webserver for TTS audio files
-startTTSServer();
-console.log('Http server for voice samples started...')
-
 console.log('Start listening...')
 
 player.getFavorites().then(favorites => {
     console.log('Got current favorites %j', favorites)
+    favorites.items.forEach(i => {
+        const text = i.title
+        const filename = i['id'].replace(path.sep, '_') + '.mp3'
+        ttsClient.ttsToMp3(text, path.join(ttsDataDir, filename), apiKey)
+    });
 }).catch(err => { console.log('Error occurred %j', err) })
 
+// starting webserver for TTS audio files
+ttsClient.startTTSServer()
+console.log('Http server for voice samples started...')
 
 // IKEA-SYMFONISK-REMOTE https://dresden-elektronik.github.io/deconz-rest-doc/endpoints/sensors/button_events/#ikea-symfonisk-remote
 ws.onmessage = (msg) => {
@@ -93,13 +100,4 @@ ws.onmessage = (msg) => {
                 }
             }
     }
-}
-
-function startTTSServer() {
-    var fileServer = new static.Server('./static');
-    http.createServer(function (request, response) {
-        request.addListener('end', function () {
-            fileServer.serve(request, response);
-        }).resume();
-    }).listen(ttsPort, ttsHost);
 }
