@@ -122,7 +122,8 @@ function handleButtonEvt(msg) {
                                         console.log('Select fav: ' + current_favorite);
                                         filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
                                         uri = `http://${ttsHost}:${ttsPort}/` + filename
-                                        say(uri)
+                                        player.play(uri)
+                                        // say(uri)
                                         // player.setAVTransportURI(uri)
                                     }
                                     break
@@ -145,8 +146,9 @@ function handleButtonEvt(msg) {
                                         console.log('Select fav: ' + current_favorite);
                                         filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
                                         uri = `http://${ttsHost}:${ttsPort}/` + filename
-                                        say(uri)
-                                        // player.setAVTransportURI(`http://${ttsHost}:${ttsPort}/` + filename)
+                                        player.play(uri)
+                                        // say(uri)
+                                        // player.setAVTransportURI(uri)
                                     }
                                     break
                                 default:
