@@ -73,6 +73,8 @@ function handleButtonEvt(msg) {
                         case 1002:
                             switch (dialogState) {
                                 case dialogStateFavorites:
+                                    console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
+                                    player.setAVTransportURI(favorites[current_favorite].uri)
                                     console.log("Dialog 'Sonos favorites' ended")
                                     dialogState = dialogStateNone
                                     break
@@ -98,11 +100,12 @@ function handleButtonEvt(msg) {
                             switch (dialogState) {
                                 case dialogStateFavorites:
                                     console.log('nextFav');
-                                    current_favorite = (current_favorite + 1) % favorites.length;
-                                    // player.setAVTransportURI(`http://${ttsHost}:${ttsPort}/` + '2_29.mp3')
-                                    const filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
-                                    console.log(filename)
-                                    player.setAVTransportURI(`http://192.168.1.50:${ttsPort}/` + filename)
+                                    // current_favorite = (current_favorite + 1) % favorites.length;
+                                    if (current_favorite < favorites.length - 1) {
+                                        current_favorite++;
+                                        const filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
+                                        player.setAVTransportURI(`http://${ttsHost}:${ttsPort}/` + '2_29.mp3')
+                                    }
                                     break
                                 default:
                                     duration = Date.now() - tsClockwiseStart
@@ -118,11 +121,11 @@ function handleButtonEvt(msg) {
                             switch (dialogState) {
                                 case dialogStateFavorites:
                                     console.log('prevFav')
-                                    if (current_favorite == 0) current_favorite = favorites.length;
-                                    current_favorite--;
-                                    const filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
-                                    console.log(filename)
-                                    player.setAVTransportURI(`http://192.168.1.50:${ttsPort}/` + filename)
+                                    if (current_favorite > 0) {
+                                        current_favorite--;
+                                        const filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
+                                        player.setAVTransportURI(`http://192.168.1.50:${ttsPort}/` + filename)
+                                    }
                                     break
                                 default:
                                     duration = Date.now() - tsCounterClockwiseStart
