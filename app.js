@@ -1,5 +1,6 @@
 const WebSocket = require('ws')
 const { Sonos } = require('sonos')
+const http = require('http')
 const static = require('node-static');
 
 const verbose = process.env.VERBOSE || false
@@ -11,6 +12,9 @@ const switch_id = process.env.DECONZ_SWITCH_ID || 6 // SYMFONISK
 const zpHost = process.env.ZP_HOST || '192.168.1.3'
 const zpVolFactor = process.env.ZP_VOLFACTOR || 150 // factor used to convert from millis => volume adjustment delta
 
+const ttsHost = process.env.TTS_HOST || '192.168.1.50'
+const ttsPort = process.env.TTS_PORT || 8080
+
 var tsClockwiseStart = 0
 var tsCounterClockwiseStart = 0
 
@@ -21,8 +25,8 @@ const player = new Sonos(zpHost);
 const ws = new WebSocket('ws://' + deHost + ':' + dePort)
 
 // starting webserver for TTS audio files
-new static.Server('./static');
-// new static.Server('./satic', { cache: 3600 });
+startTTSServer();
+console.log('Http server for voice samples started...')
 
 console.log('Start listening...')
 
@@ -89,4 +93,13 @@ ws.onmessage = (msg) => {
                 }
             }
     }
+}
+
+function startTTSServer() {
+    var fileServer = new static.Server('./static');
+    http.createServer(function (request, response) {
+        request.addListener('end', function () {
+            fileServer.serve(request, response);
+        }).resume();
+    }).listen(ttsPort, ttsHost);
 }
