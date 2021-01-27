@@ -1,5 +1,6 @@
 const WebSocket = require('ws')
 const { Sonos } = require('sonos')
+const static = require('node-static');
 
 const verbose = process.env.VERBOSE || false
 
@@ -18,6 +19,10 @@ const player = new Sonos(zpHost);
 
 // init listening to deconz
 const ws = new WebSocket('ws://' + deHost + ':' + dePort)
+
+// starting webserver for TTS audio files
+new static.Server('./static');
+// new static.Server('./satic', { cache: 3600 });
 
 console.log('Start listening...')
 
