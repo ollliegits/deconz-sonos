@@ -37,6 +37,8 @@ var dialogState = dialogStateNone
 var favorites;
 var current_favorite;
 
+ttsClient.ttsToMp3('Favoriten', path.join(ttsDataDir, 'fav.mp3'), apiKey)
+
 player.getFavorites().then(response => {
     console.log('Got Sonos favorites %j', response)
     favorites = response.items
@@ -109,6 +111,8 @@ function handleButtonEvt(msg) {
                             dialogState = dialogStateFavorites
                             current_favorite = 0 // always start with favorite at idx 0
                             player.stop()
+                            uri = `http://${ttsHost}:${ttsPort}/` + 'fav.mp3'
+                            player.play(uri)
                             break
                         case 2001:
                             tsClockwiseStart = Date.now()
@@ -131,7 +135,9 @@ function handleButtonEvt(msg) {
                                     duration = Date.now() - tsClockwiseStart
                                     console.log("volume ∂: %d", duration / zpVolFactor)
                                     player.adjustVolume(duration / zpVolFactor)
-                                    player.getVolume().then((vol) => console.log("Volume: %d", vol))
+                                    if (verbose == 'true') {
+                                        player.getVolume().then((vol) => console.log("Volume: %d", vol))
+                                    }
                             }
                             break
                         case 3001:
@@ -155,7 +161,9 @@ function handleButtonEvt(msg) {
                                     duration = Date.now() - tsCounterClockwiseStart
                                     console.log("volume ∂: %d", -1 * duration / zpVolFactor)
                                     player.adjustVolume(-1 * duration / zpVolFactor)
-                                    player.getVolume().then((vol) => console.log("Volume: %d", vol))
+                                    if (verbose == 'true') {
+                                        player.getVolume().then((vol) => console.log("Volume: %d", vol))
+                                    }
                             }
                             break
                     }
