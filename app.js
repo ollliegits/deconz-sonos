@@ -87,9 +87,12 @@ function handleButtonEvt(msg) {
                             switch (dialogState) {
                                 case dialogStateFavorites:
                                     uri = favorites[current_favorite].uri
+                                    console.log(uri)
                                     // TODO: clean up the Spotify hot fix
                                     uri = uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')
-                                    player.play(uri).then((success) => {
+                                    console.log('Cleaning Spotify URI....')
+                                    console.log(uri)
+                                    player.setAVTransportURI(uri).then((success) => {
                                         console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
                                     }).catch((err) => {
                                         console.error('Error starting playlist')
@@ -112,7 +115,7 @@ function handleButtonEvt(msg) {
                             current_favorite = 0 // always start with favorite at idx 0
                             player.stop()
                             uri = `http://${ttsHost}:${ttsPort}/` + 'fav.mp3'
-                            player.play(uri)
+                            player.setAVTransportURI(uri)
                             break
                         case 2001:
                             tsClockwiseStart = Date.now()
@@ -126,7 +129,7 @@ function handleButtonEvt(msg) {
                                         console.log('Select fav: ' + current_favorite);
                                         filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
                                         uri = `http://${ttsHost}:${ttsPort}/` + filename
-                                        player.play(uri)
+                                        player.setAVTransportURI(uri)
                                         // say(uri)
                                         // player.setAVTransportURI(uri)
                                     }
@@ -152,7 +155,7 @@ function handleButtonEvt(msg) {
                                         console.log('Select fav: ' + current_favorite);
                                         filename = favorites[current_favorite]['id'].replace(path.sep, '_') + '.mp3'
                                         uri = `http://${ttsHost}:${ttsPort}/` + filename
-                                        player.play(uri)
+                                        player.setAVTransportURI(uri)
                                         // say(uri)
                                         // player.setAVTransportURI(uri)
                                     }
