@@ -10,6 +10,11 @@ class TTS {
         this.ttsPort = ttsPort
         this.ttsHost = ttsHost
         this.speechOptions = speechOptions || {};
+
+        // create directory if doesnt exist
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir);
+        }
     }
 
     ttsToMp3(text, outputFile, apiKey) {
