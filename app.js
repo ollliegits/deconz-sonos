@@ -87,16 +87,17 @@ function handleButtonEvt(msg) {
                             switch (dialogState) {
                                 case dialogStateFavorites:
                                     uri = favorites[current_favorite].uri
-                                    console.log(uri)
                                     // TODO: clean up the Spotify hot fix
                                     uri = uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')
                                     console.log('Cleaning Spotify URI....')
                                     console.log(uri)
-                                    player.setAVTransportURI(uri).then((success) => {
-                                        console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
-                                    }).catch((err) => {
-                                        console.error('Error starting playlist')
-                                        console.error(err)
+                                    player.flush().then(res => {
+                                        player.play(uri).then((success) => {
+                                            console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
+                                        }).catch((err) => {
+                                            console.error('Error starting playlist')
+                                            console.error(err)
+                                        })
                                     })
                                     dialogState = dialogStateNone
                                     break
