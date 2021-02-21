@@ -19,7 +19,7 @@ const ttsPort = process.env.TTS_PORT || 8080
 const ttsApiKey = process.env.GCP_KEY
 const ttsDataDir = process.env.TTS_DATA_DIR || '/tmp/tts/'
 const ttsMenuName = process.env.TTS_MENU_NAME || 'Favoriten'
-const ttsVolume = process.env.TTS_VOLUME || 8
+const ttsVolume = process.env.TTS_VOLUME || 18
 
 const ttsClient = new tts.TTS(ttsApiKey, ttsDataDir, ttsPort, ttsHost)
 
