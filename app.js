@@ -16,10 +16,12 @@ const zpVolFactor = process.env.ZP_VOLFACTOR || 150 // factor used to convert fr
 
 const ttsHost = process.env.TTS_HOST || '192.168.1.50'
 const ttsPort = process.env.TTS_PORT || 8080
-const apiKey = process.env.GCP_KEY
+const ttsApiKey = process.env.GCP_KEY
 const ttsDataDir = process.env.TTS_DATA_DIR || '/tmp/tts/'
+const ttsMenuName = process.env.TTS_MENU_NAME || 'Favoriten'
+const ttsVolume = process.env.TTS_VOLUME || 8
 
-const ttsClient = new tts.TTS(apiKey, ttsDataDir, ttsPort, ttsHost)
+const ttsClient = new tts.TTS(ttsApiKey, ttsDataDir, ttsPort, ttsHost)
 
 var tsClockwiseStart = 0
 var tsCounterClockwiseStart = 0
@@ -33,11 +35,12 @@ player.setSpotifyRegion(SpotifyRegion.EU)
 const dialogStateFavorites = 10
 const dialogStateNone = 0
 var dialogState = dialogStateNone
+var dialogResumeVolume
 
 var favorites;
 var current_favorite;
 
-ttsClient.ttsToMp3('Favoriten', path.join(ttsDataDir, 'fav.mp3'), apiKey)
+ttsClient.ttsToMp3(ttsMenuName, path.join(ttsDataDir, 'fav.mp3'), ttsApiKey)
 
 player.getFavorites().then(response => {
     console.log('Got Sonos favorites %j', response)
@@ -50,7 +53,7 @@ player.getFavorites().then(response => {
         favorites.forEach(i => {
             const text = i.title
             const filename = i['id'].replace(path.sep, '_') + '.mp3'
-            ttsClient.ttsToMp3(text, path.join(ttsDataDir, filename), apiKey)
+            ttsClient.ttsToMp3(text, path.join(ttsDataDir, filename), ttsApiKey)
             console.log(`${text} -> ${i.uri}`)
         });
     }).then(() => {
@@ -91,6 +94,7 @@ function handleButtonEvt(msg) {
                                     uri = uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')
                                     console.log('Cleaning Spotify URI....')
                                     console.log(uri)
+                                    player.setVolume(dialogResumeVolume);
                                     player.flush().then(res => {
                                         player.play(uri).then((success) => {
                                             console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
@@ -113,6 +117,10 @@ function handleButtonEvt(msg) {
                         case 1005:
                             console.log("Dialog 'Sonos favorites' started")
                             dialogState = dialogStateFavorites
+                            player.getVolume().then((vol) => {
+                                dialogResumeVolume = vol;
+                                player.setVolume(ttsVolume);
+                            })
                             current_favorite = 0 // always start with favorite at idx 0
                             player.stop()
                             uri = `http://${ttsHost}:${ttsPort}/` + 'fav.mp3'
