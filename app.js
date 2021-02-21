@@ -20,6 +20,7 @@ const ttsApiKey = process.env.GCP_KEY
 const ttsDataDir = process.env.TTS_DATA_DIR || '/tmp/tts/'
 const ttsMenuName = process.env.TTS_MENU_NAME || 'Favoriten'
 const ttsVolume = process.env.TTS_VOLUME || 18
+const ttsPlayMode = process.env.TTS_PLAY_MODE || 'SHUFFLE_NOREPEAT' // allowed values: NORMAL, SHUFFLE_NOREPEAT, SHUFFLE, REPEAT_ONE, REPEAT_ALL
 
 const ttsClient = new tts.TTS(ttsApiKey, ttsDataDir, ttsPort, ttsHost)
 
@@ -95,6 +96,7 @@ function handleButtonEvt(msg) {
                                     console.log('Cleaning Spotify URI....')
                                     console.log(uri)
                                     player.setVolume(dialogResumeVolume);
+                                    player.setPlayMode(ttsPlayMode);
                                     player.flush().then(res => {
                                         player.play(uri).then((success) => {
                                             console.log('Starting playback of selected favorite:' + favorites[current_favorite].title)
