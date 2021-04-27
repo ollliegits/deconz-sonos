@@ -9,7 +9,7 @@ const verbose = process.env.VERBOSE || false
 
 const deHost = process.env.DECONZ_WS_HOST || '192.168.1.50'
 const dePort = process.env.DECONZ_WS_PORT || 443
-const switch_id = process.env.DECONZ_SWITCH_ID || 6 // SYMFONISK
+const switch_id = process.env.DECONZ_SWITCH_ID || 14 // SYMFONISK
 
 const zpHost = process.env.ZP_HOST || '192.168.1.3'
 const zpVolFactor = process.env.ZP_VOLFACTOR || 150 // factor used to convert from millis => volume adjustment delta
