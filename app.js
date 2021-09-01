@@ -13,7 +13,8 @@ const switch_id = process.env.DECONZ_SWITCH_ID || 15 // SYMFONISK
 
 console.log('Environment ' + process.env)
 
-const zpHost = process.env.ZP_HOST || '192.168.1.3'
+// const zpHost = process.env.ZP_HOST || '192.168.1.3' // Wohnzimmer
+const zpHost = process.env.ZP_HOST || '192.168.1.12' // Büro
 const zpVolFactor = process.env.ZP_VOLFACTOR || 150 // factor used to convert from millis => volume adjustment delta
 
 const ttsHost = process.env.TTS_HOST || '192.168.1.50'
