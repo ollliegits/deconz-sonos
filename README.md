@@ -29,14 +29,15 @@ Install the great [node-sonos](https://github.com/bencevans/node-sonos) library 
 For other installation options consult the [official page](https://github.com/bencevans/node-sonos#install).
 
 ### DeCONZ-Sonos App
-Finally install deconz-sonos from this Github repo using npm:
-
-    npm install ollliegits/deconz-sonos
+Finally install deconz-sonos from this Github repo using npm: `npm install ollliegits/deconz-sonos`.
 
 Now that all prerequisits are installed, deconz-sonos can be setup to run as a systemd service.
 
-TODO:
+1. Place the file `deconz-sonos.service` under `/lib/systemd/system/`
+1. Start the service: `systemctl start deconz-sonos`
+1. Enable auto-start at boot: `systemctl enable deconz-sonos`
 
-## Configuration & Usage
+## Install an update from Git
 
-TODO:
+Run `npm install ollliegits/deconz-sonos#feat/favorites-selection-with-tts` to install latest version from Git.
+Restart the deconz-sonos service on the machine: `sudo service deconz-sonos restart`.
