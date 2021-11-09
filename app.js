@@ -11,7 +11,7 @@ const deHost = process.env.DECONZ_WS_HOST || '192.168.1.50'
 const dePort = process.env.DECONZ_WS_PORT || 443
 const switch_id = process.env.DECONZ_SWITCH_ID || 15 // SYMFONISK
 
-console.log('Environment ' + process.env)
+console.log('Environment ' + JSON.stringify(process.env, null, 2))
 
 // const zpHost = process.env.ZP_HOST || '192.168.1.3' // Wohnzimmer
 const zpHost = process.env.ZP_HOST || '192.168.1.12' // Büro
