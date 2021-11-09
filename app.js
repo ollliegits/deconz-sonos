@@ -47,12 +47,15 @@ var current_favorite;
 ttsClient.ttsToMp3(ttsMenuName, path.join(ttsDataDir, 'fav.mp3'), ttsApiKey)
 
 player.getFavorites().then(response => {
-    console.log('Got Sonos favorites %j', response)
+    console.log('Got Sonos favorites.')
+    console.log(response)
     favorites = response.items
 
     player.getPlaylist().then(response => {
-        console.log('Got Sonos playlists %j', response)
+        console.log('Got Sonos playlists.')
+        console.log(response)
         favorites = favorites.concat(response.items)
+        console.log(favorites)
         // asynchronously generate tts mp3's
         favorites.forEach(i => {
             const text = i.title
@@ -126,7 +129,7 @@ function handleButtonEvt(msg) {
                                 dialogResumeVolume = vol;
                                 player.setVolume(ttsVolume);
                             })
-                            current_favorite = 0 // always start with favorite at idx 0
+                            current_favorite = -1 // always start with favorite at idx 0
                             player.stop()
                             uri = `http://${ttsHost}:${ttsPort}/` + 'fav.mp3'
                             player.setAVTransportURI(uri)
