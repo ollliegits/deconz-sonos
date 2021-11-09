@@ -55,6 +55,12 @@ player.getFavorites().then(response => {
         console.log('Got Sonos playlists.')
         console.log(response)
         favorites = favorites.concat(response.items)
+        // sort by title
+        favorites.sort(function(a,b) {
+            var x = a.title.toLowerCase();
+            var y = b.title.toLowerCase();
+            return x < y ? -1 : x > y ? 1 : 0;
+        });
         console.log(favorites)
         // asynchronously generate tts mp3's
         favorites.forEach(i => {
