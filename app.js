@@ -62,13 +62,19 @@ player.getFavorites().then(response => {
             return x < y ? -1 : x > y ? 1 : 0;
         });
         console.log(favorites)
+
+        // apply a hot fix for  Spotify URIs
+        console.log('Cleaning Spotify URI....')
+        // TODO: clean up the following code line: Spotify hot fix
+        favorites.forEach(i => {i.uri = i.uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')})
+
         // asynchronously generate tts mp3's
         favorites.forEach(i => {
             const text = i.title
             const filename = i['id'].replace(path.sep, '_') + '.mp3'
             ttsClient.ttsToMp3(text, path.join(ttsDataDir, filename), ttsApiKey)
             console.log(`${text} -> ${i.uri}`)
-        });
+        })
     }).then(() => {
         // starting webserver for TTS audio files
         ttsClient.startTTSServer()
