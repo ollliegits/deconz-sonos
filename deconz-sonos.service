@@ -11,7 +11,7 @@ ExecStart=node /home/pi/node_modules/deconz-sonos/app.js
 Restart=always
 User=pi
 Group=pi
-# Environment=PATH=/usr/bin:/usr/local/bin
+EnvironmentFile=/home/pi/.gcprc
 WorkingDirectory=/home/pi/node_modules/deconz-sonos/
 
 [Install]
