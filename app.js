@@ -1,5 +1,4 @@
-const { Sonos } = require('sonos')
-const { SpotifyRegion } = require('sonos')
+const { Sonos, Helpers, SpotifyRegion } = require('sonos')
 
 const path = require('path')
 const tts = require('./tts')
@@ -48,12 +47,10 @@ ttsClient.ttsToMp3(ttsMenuName, path.join(ttsDataDir, 'fav.mp3'), ttsApiKey)
 
 player.getFavorites().then(response => {
     console.log('Got Sonos favorites.')
-    console.log(response)
     favorites = response.items
 
     player.getPlaylist().then(response => {
         console.log('Got Sonos playlists.')
-        console.log(response)
         favorites = favorites.concat(response.items)
         // sort by title
         favorites.sort(function(a,b) {
@@ -65,7 +62,6 @@ player.getFavorites().then(response => {
 
         // apply a hot fix for  Spotify URIs
         console.log('Cleaning Spotify URI....')
-        // TODO: clean up the following code line: Spotify hot fix
         favorites.forEach(i => {i.uri = i.uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')})
 
         // asynchronously generate tts mp3's
@@ -109,9 +105,6 @@ function handleButtonEvt(msg) {
                             switch (dialogState) {
                                 case dialogStateFavorites:
                                     uri = favorites[current_favorite].uri
-                                    // TODO: clean up the Spotify hot fix
-                                    uri = uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')
-                                    console.log('Cleaning Spotify URI....')
                                     console.log(uri)
                                     player.setVolume(dialogResumeVolume);
                                     player.setPlayMode(ttsPlayMode);
