@@ -7,6 +7,18 @@ Most likely you have built your Phoscon gateway (aka deCONZ gateway) yourself us
 
 ## Installation
 
+### Git command line tools
+First, check if git is installed by typing `which git`.
+
+    pi@phoscon:~ $ which git
+    /usr/bin/git
+
+
+In case no result is displayed, install git using `apt-get`:
+
+    sudo apt-get install git
+
+
 ### Node.js
 First, check if nodejs is installed by typing `which node`.
 
@@ -32,7 +44,7 @@ Install the [node-sonos](https://github.com/bencevans/node-sonos) library from g
 For other installation options consult the [official page](https://github.com/bencevans/node-sonos#install).
 
 ### DeCONZ-Sonos App
-Finally install deconz-sonos from this Github repo using npm:
+Finally install deconz-sonos from this Github repo using npm: `npm install ollliegits/deconz-sonos`.
 
 ```sh
 # install from master
@@ -42,9 +54,9 @@ npm install ollliegits/deconz-sonos
 npm install 'ollliegits/deconz-sonos#feat/favorites-selection-with-tts'
 ```
 
-Now that all prerequisits are installed, deconz-sonos can be setup to run as a systemd service.
+### DeCONZ-Sonos systemd service
 
-Use the file `deconz-sonos.service` as template, adapt to your needs, and save in directory `/lib/systemd/system/deconz-sonos.service`.
+Now that all prerequisits are installed, deconz-sonos can be setup to run as a systemd service. Use the file `deconz-sonos.service` as template, adapt to your needs, and save in directory `/lib/systemd/system/deconz-sonos.service`.
 
 Now your deconz-sonos is ready to run as a systemd service:
 
@@ -62,6 +74,14 @@ journalctl -u deconz-sonos.service
 journalctl -uf deconz-sonos.service
 ```
 
-## Configuration & Usage
+### For Google Cloud TTS support
 
-TODO:
+In order for TTS support (from branch `feat/favorites-selection-with-tts`) you must set the environment variable `GCP_KEY` with your personal GCP key.
+```
+read -s GCP_KEY
+```
+
+## Install an update from Git
+
+Run `npm install ollliegits/deconz-sonos#feat/favorites-selection-with-tts` to install latest version from Git.
+Restart the deconz-sonos service on the machine: `sudo service deconz-sonos restart`.

@@ -1,16 +1,40 @@
-const https = require('https')
 const fs = require('fs');
-const util = require('util');
+const http = require('http')
+const https = require('https')
+const staticServ = require('node-static');
 
-const apiKey = process.env.GCP_KEY
+class TTS {
+    constructor(gcpKey, dataDir, ttsPort, ttsHost, speechOptions) {
+        this.gcpKey = gcpKey;
+        this.dataDir = dataDir;
+        this.ttsPort = ttsPort
+        this.ttsHost = ttsHost
+        this.speechOptions = speechOptions || {};
 
-function ttsToMp3(text, outputFile, apiKey) {
-    const request = {
-        input: { text: text },
-        voice: { languageCode: 'de-DE', "name": "de-DE-Wavenet-F" },
-        audioConfig: { audioEncoding: 'MP3', "pitch": 0, "speakingRate": 1.150 },
-    };
-    synthesizeSpeechToMp3(request, apiKey, outputFile)
+        // create directory if doesnt exist
+        if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir);
+        }
+    }
+
+    ttsToMp3(text, outputFile, apiKey) {
+        const request = {
+            input: { text: text },
+            voice: { languageCode: 'de-DE', name: "de-DE-Wavenet-F" },
+            audioConfig: { audioEncoding: 'MP3', pitch: 0, speakingRate: 1.150 },
+        };
+        synthesizeSpeechToMp3(request, apiKey, outputFile);
+    }
+
+    startTTSServer() {
+        var fileServer = new staticServ.Server(this.dataDir);
+        http.createServer(function (request, response) {
+            request.addListener('end', function () {
+                fileServer.serve(request, response);
+            }).resume();
+        }).listen(this.ttsPort, this.ttsHost);
+    }
+
 }
 
 function synthesizeSpeechToMp3(request, apiKey, outputFile) {
@@ -70,7 +94,4 @@ function synthesizeSpeechToMp3(request, apiKey, outputFile) {
     req.end()
 }
 
-// ttsToMp3('Easy listening', 'output.mp3', apiKey)
-// ttsToMp3('Guten Morgen Levi, es ist Zeit zum Aufstehen.', 'output-levi.mp3', apiKey)
-const txt = '02: Einschlaflieder - Anne Geddes präsentiert Lieblingsmusik für Ihr Baby. Absolut relax (Easy Listening). Bar Lounge. Bella Ciao - HUGEL Remix. ENERGY Digital. French Indie Pop. Lieblingssongs. MDR KULTUR 95.4 (Klassik). Tumult. Weihnachten In Familie. WhoMadeWho Radio.'
-ttsToMp3(txt, 'output.mp3', apiKey)
+module.exports.TTS = TTS
