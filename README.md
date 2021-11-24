@@ -43,11 +43,33 @@ For other installation options consult the [official page](https://github.com/be
 ### DeCONZ-Sonos App
 Finally install deconz-sonos from this Github repo using npm: `npm install ollliegits/deconz-sonos`.
 
-Now that all prerequisits are installed, deconz-sonos can be setup to run as a systemd service.
+```sh
+# install from master
+npm install ollliegits/deconz-sonos
 
-1. Place the file `deconz-sonos.service` under `/lib/systemd/system/`. (`sudo ln -s deconz-sonos.service /lib/systemd/system/deconz-sonos.service`)
-1. Start the service: `systemctl start deconz-sonos`
-1. Enable auto-start at boot: `systemctl enable deconz-sonos`
+# install from branch
+npm install 'ollliegits/deconz-sonos#feat/favorites-selection-with-tts'
+```
+
+### DeCONZ-Sonos systemd service
+
+Now that all prerequisits are installed, deconz-sonos can be setup to run as a systemd service. Use the file `deconz-sonos.service` as template, adapt to your needs, and save in directory `/lib/systemd/system/deconz-sonos.service`.
+
+Now your deconz-sonos is ready to run as a systemd service:
+
+```sh
+# start at boot
+sudo systemctl enable deconz-sonos
+
+# start|stop|restart manually
+sudo service deconz-sonos start
+
+# view logs of this systemd unit
+journalctl -u deconz-sonos.service
+
+# view logs of this systemd unit in follow-mode
+journalctl -uf deconz-sonos.service
+```
 
 ### For Google Cloud TTS support
 
