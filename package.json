@@ -1,6 +1,6 @@
 {
   "name": "deconz-sonos",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Allow controll of Sonos Zone Player through Zigbee devices attached to the deCONZ bridge.",
   "main": "app.js",
   "scripts": {
