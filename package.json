@@ -10,7 +10,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "node-static": "0.7.11",
-    "sonos": "^1.14.0",
+    "sonos": "^1.14.1",
     "ws": "~7.4.2"
   },
   "author": "ollliegits",
