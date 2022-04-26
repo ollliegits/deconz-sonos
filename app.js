@@ -53,7 +53,7 @@ player.getFavorites().then(response => {
         console.log('Got Sonos playlists.')
         favorites = favorites.concat(response.items)
         // sort by title
-        favorites.sort(function(a,b) {
+        favorites.sort(function (a, b) {
             var x = a.title.toLowerCase();
             var y = b.title.toLowerCase();
             return x < y ? -1 : x > y ? 1 : 0;
@@ -62,7 +62,11 @@ player.getFavorites().then(response => {
 
         // apply a hot fix for  Spotify URIs
         console.log('Cleaning Spotify URI....')
-        favorites.forEach(i => {i.uri = i.uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify').replace(/%3a/g, ':')})
+        favorites.forEach(i => {
+            i.uri = i.uri.replace(/^x-rincon-cpcontainer:[0-9a-z]+spotify/i, 'spotify')
+                .replace(/%3a/g, ':')
+                .replace(/\?.*$/, '')
+        })
 
         // asynchronously generate tts mp3's
         favorites.forEach(i => {
